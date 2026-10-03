@@ -1,0 +1,57 @@
+{
+    "name": "ojcloveu/loghub-client",
+    "description": "Fail-open Laravel client for LogHub",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/ojcloveu/loghub-client",
+    "keywords": [
+        "laravel",
+        "logging",
+        "loghub",
+        "monolog"
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/http": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/console": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/log": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/queue": "^11.0 || ^12.0 || ^13.0",
+        "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+        "monolog/monolog": "^3.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0 || ^10.0 || ^11.0",
+        "phpunit/phpunit": "^11.5 || ^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ojcloveu\\LogHub\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ojcloveu\\LogHub\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ojcloveu\\LogHub\\LogHubServiceProvider"
+            ]
+        }
+    },
+    "support": {
+        "issues": "https://github.com/ojcloveu/loghub-client/issues",
+        "source": "https://github.com/ojcloveu/loghub-client"
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        },
+        "sort-packages": true
+    },
+    "prefer-stable": true
+}

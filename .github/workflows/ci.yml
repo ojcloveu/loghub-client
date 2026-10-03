@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Composer validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+      - run: composer validate --strict
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: composer audit --locked --no-interaction
+      - run: composer dump-autoload --optimize --strict-psr --no-interaction
+
+  compatibility:
+    name: Laravel ${{ matrix.laravel }} / PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - laravel: '11'
+            php: '8.2'
+            testbench: '^9.0'
+            phpunit: '^11.5'
+            security-flag: '--no-security-blocking'
+          - laravel: '12'
+            php: '8.2'
+            testbench: '^10.0'
+            phpunit: '^11.5'
+            security-flag: ''
+          - laravel: '13'
+            php: '8.3'
+            testbench: '^11.0'
+            phpunit: '^12.0'
+            security-flag: ''
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, dom, mbstring, pcntl, pdo_sqlite
+          tools: composer:v2
+          coverage: none
+      - name: Resolve compatibility lane
+        run: >-
+          composer update
+          --with-all-dependencies
+          --no-interaction
+          --no-progress
+          --prefer-dist
+          ${{ matrix.security-flag }}
+          --with=laravel/framework:^${{ matrix.laravel }}.0
+          --with=orchestra/testbench:${{ matrix.testbench }}
+          --with=phpunit/phpunit:${{ matrix.phpunit }}
+      - name: Test package
+        run: composer test
