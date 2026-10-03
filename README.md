@@ -10,10 +10,22 @@ A fail-open Laravel logging client for LogHub. It writes normalized Monolog reco
 
 ## Installation
 
-Install the package with Composer:
+Until the package is available on Packagist, register its GitHub repository in your Laravel application and install the tagged release:
 
 ```bash
-composer require ojcloveu/loghub-client
+composer config repositories.loghub-client vcs https://github.com/ojcloveu/loghub-client.git
+composer require ojcloveu/loghub-client:^1.0
+php artisan vendor:publish --tag=loghub-client-config
+```
+
+Composer writes the repository configuration and package requirement to your application's `composer.json`. Commit both `composer.json` and `composer.lock` with your application.
+
+For a private fork, authenticate Composer with a GitHub token that can read the repository before running the same commands. The official repository is public and does not require a token for normal installation.
+
+After the package is published on Packagist, installation can be shortened to:
+
+```bash
+composer require ojcloveu/loghub-client:^1.0
 php artisan vendor:publish --tag=loghub-client-config
 ```
 
